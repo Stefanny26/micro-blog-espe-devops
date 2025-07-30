@@ -64,6 +64,25 @@ npm start
 
 La aplicación estará disponible en `http://localhost:3000`
 
+## 🧪 Ejecutar Pruebas
+
+```bash
+# Ejecutar script de pruebas completo
+./local-test.sh
+
+# O ejecutar solo las pruebas del backend
+cd backend
+npm test
+```
+
+**Cobertura de Pruebas**: 10 casos de prueba cubriendo:
+- Health check endpoint
+- Creación de posts
+- Validaciones (contenido vacío, límite de caracteres)
+- Listado ordenado de posts
+- Búsqueda por ID
+- Manejo de errores
+
 ## 🔄 Flujo DevOps Implementado
 
 ```
@@ -85,16 +104,20 @@ PLAN → CODE → BUILD → TEST → RELEASE → DEPLOY → OPERATE → MONITOR
 ## 📊 Estado del Proyecto
 
 - ✅ Configuración inicial
-- ✅ Estructura del proyecto
-- ✅ Backend API
-- ✅ Frontend básico
-- ✅ Pipeline CI/CD
-- ✅ Despliegue en producción
-- ✅ Monitoreo activo
+- ✅ Estructura del proyecto  
+- ✅ Backend API (10/10 tests pasando)
+- ✅ Frontend responsivo
+- ✅ Pipeline CI/CD (GitHub Actions)
+- 🔄 Despliegue en progreso
+- 🔄 Monitoreo en configuración
 
-## 🌐 URL de Producción
+## 🌐 Enlaces del Proyecto
 
-**Aplicación en vivo**: [Próximamente - se actualizará después del despliegue]
+- **Aplicación en vivo**: [Próximamente - configurar deployment]
+- **Repositorio GitHub**: [Configurar según github-setup.md](./docs/github-setup.md)
+- **Tablero Kanban**: [Ver estado de tareas](./docs/kanban-board.md)
+- **Plan de Monitoreo**: [Ver estrategia](./docs/monitoring-plan.md)
+- **Guía de Deployment**: [Ver instrucciones](./docs/deployment-guide.md)
 
 ## 📝 Notas de Versión
 

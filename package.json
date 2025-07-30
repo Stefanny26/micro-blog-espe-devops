@@ -1,0 +1,30 @@
+{
+  "name": "micro-blog-espe",
+  "version": "1.0.0",
+  "description": "Micro-Blog Institucional para ESPE - DevOps Project",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "test": "cd backend && npm test",
+    "install-deps": "cd backend && npm install",
+    "heroku-postbuild": "cd backend && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/espe-devops/micro-blog-institucional.git"
+  },
+  "keywords": [
+    "micro-blog",
+    "devops",
+    "espe",
+    "express",
+    "nodejs"
+  ],
+  "author": "ESPE DevOps Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
