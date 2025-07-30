@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro-Blog ESPE - Demo Live</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --espe-blue: #1e3a8a;
+            --espe-gold: #fbbf24;
+            --espe-gray: #6b7280;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .main-container {
+            margin-top: 100px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .post-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--espe-blue), var(--espe-gold));
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .character-count {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .character-count.warning {
+            color: #f59e0b;
+        }
+
+        .character-count.danger {
+            color: #ef4444;
+        }
+
+        .stats-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .post-meta {
+            color: var(--espe-gray);
+            font-size: 0.85rem;
+        }
+
+        .demo-badge {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .footer {
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .live-indicator {
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-graduation-cap text-primary me-2"></i>
+                <strong>Micro-Blog ESPE</strong>
+                <span class="demo-badge ms-2">
+                    <span class="live-indicator"></span>DEMO LIVE
+                </span>
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="fas fa-code text-primary me-1"></i>
+                    <strong>DevOps Project 2025</strong>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container main-container">
+        <!-- Header -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 text-white mb-3">
+                    <i class="fas fa-comments text-warning me-3"></i>
+                    Micro-Blog Institucional ESPE
+                </h1>
+                <p class="lead text-white-50">
+                    Plataforma de comunicación interna para la comunidad universitaria
+                </p>
+                <div class="alert alert-info d-inline-block">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Demo Funcional:</strong> Esta aplicación usa localStorage para simular la persistencia de datos
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-comments fa-2x mb-2"></i>
+                        <h3 class="mb-0" id="total-posts">0</h3>
+                        <p class="mb-0">Posts Publicados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x mb-2"></i>
+                        <h3 class="mb-0" id="total-authors">0</h3>
+                        <p class="mb-0">Autores Activos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock fa-2x mb-2"></i>
+                        <p class="mb-0" id="last-update">Sin actividad</p>
+                        <small>Último Post</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Post Form -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-edit me-2"></i>
+                            Publicar Nuevo Mensaje
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="post-form">
+                            <div class="mb-3">
+                                <label for="post-content" class="form-label">
+                                    <i class="fas fa-comment-dots me-2"></i>
+                                    Contenido del mensaje
+                                </label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="post-content" 
+                                    rows="4" 
+                                    placeholder="Comparte algo interesante con la comunidad ESPE..."
+                                    maxlength="280"
+                                    required>
+                                </textarea>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <small class="text-muted">Máximo 280 caracteres</small>
+                                    <span class="character-count" id="char-count">0/280</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="post-author" class="form-label">
+                                    <i class="fas fa-user me-2"></i>
+                                    Autor (opcional)
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="post-author" 
+                                    placeholder="Tu nombre o 'Anónimo'"
+                                    maxlength="50">
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>
+                                    Publicar Mensaje
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts List -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Mensajes Recientes
+                            <span class="badge bg-secondary ms-2" id="posts-count">0</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" id="posts-container">
+                        <!-- Posts will be inserted here -->
+                        <div class="text-center text-muted py-5" id="empty-state">
+                            <i class="fas fa-comments fa-3x mb-3 opacity-50"></i>
+                            <h5>¡Sé el primero en publicar!</h5>
+                            <p>Comparte tu primer mensaje en el Micro-Blog ESPE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-graduation-cap me-2"></i>Universidad ESPE</h6>
+                    <p class="mb-0">Proyecto de Programación Avanzada 202550</p>
+                    <small class="text-muted">Implementación de Ciclo DevOps</small>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h6><i class="fas fa-code me-2"></i>Tecnologías</h6>
+                    <p class="mb-0">HTML5 • CSS3 • JavaScript • Bootstrap</p>
+                    <small class="text-muted">GitHub Pages • GitHub Actions</small>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="text-center">
+                <small class="text-muted">
+                    © 2025 DevOps Team ESPE. Desarrollado con ❤️ para la comunidad universitaria.
+                </small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Application JavaScript -->
+    <script>
+        // Application State
+        let posts = JSON.parse(localStorage.getItem('micro-blog-posts')) || [];
+        let nextId = parseInt(localStorage.getItem('micro-blog-next-id')) || 1;
+
+        // DOM Elements
+        const postForm = document.getElementById('post-form');
+        const postContent = document.getElementById('post-content');
+        const postAuthor = document.getElementById('post-author');
+        const charCount = document.getElementById('char-count');
+        const postsContainer = document.getElementById('posts-container');
+        const emptyState = document.getElementById('empty-state');
+        const totalPosts = document.getElementById('total-posts');
+        const totalAuthors = document.getElementById('total-authors');
+        const lastUpdate = document.getElementById('last-update');
+        const postsCount = document.getElementById('posts-count');
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPosts();
+            updateStats();
+            
+            // Character counter
+            postContent.addEventListener('input', updateCharacterCount);
+            
+            // Form submission
+            postForm.addEventListener('submit', handleSubmit);
+            
+            // Auto-save draft
+            postContent.addEventListener('input', saveDraft);
+            postAuthor.addEventListener('input', saveDraft);
+            
+            // Load draft
+            loadDraft();
+        });
+
+        // Character count update
+        function updateCharacterCount() {
+            const length = postContent.value.length;
+            charCount.textContent = `${length}/280`;
+            
+            charCount.className = 'character-count';
+            if (length > 250) {
+                charCount.classList.add('warning');
+            }
+            if (length > 270) {
+                charCount.classList.add('danger');
+            }
+        }
+
+        // Handle form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const content = postContent.value.trim();
+            const author = postAuthor.value.trim() || 'Anónimo';
+            
+            if (!content) {
+                showAlert('El contenido no puede estar vacío', 'warning');
+                return;
+            }
+            
+            if (content.length > 280) {
+                showAlert('El contenido no puede exceder 280 caracteres', 'danger');
+                return;
+            }
+            
+            // Create new post
+            const newPost = {
+                id: nextId++,
+                content: content,
+                author: author,
+                timestamp: new Date().toISOString(),
+                likes: 0
+            };
+            
+            posts.unshift(newPost); // Add to beginning
+            
+            // Save to localStorage
+            localStorage.setItem('micro-blog-posts', JSON.stringify(posts));
+            localStorage.setItem('micro-blog-next-id', nextId.toString());
+            
+            // Clear form
+            postForm.reset();
+            updateCharacterCount();
+            clearDraft();
+            
+            // Update UI
+            renderPosts();
+            updateStats();
+            
+            showAlert('¡Mensaje publicado exitosamente!', 'success');
+        }
+
+        // Render all posts
+        function renderPosts() {
+            if (posts.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            const postsHTML = posts.map(post => createPostHTML(post)).join('');
+            postsContainer.innerHTML = postsHTML;
+        }
+
+        // Create HTML for a single post
+        function createPostHTML(post) {
+            const date = new Date(post.timestamp);
+            const formattedDate = date.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            return `
+                <div class="post-card card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">${escapeHtml(post.author)}</h6>
+                                    <small class="post-meta">
+                                        <i class="fas fa-clock me-1"></i>
+                                        ${formattedDate}
+                                    </small>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-dark">#${post.id}</span>
+                        </div>
+                        
+                        <p class="card-text">${escapeHtml(post.content)}</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-outline-primary" onclick="likePost(${post.id})">
+                                    <i class="fas fa-heart me-1"></i>
+                                    Me gusta <span class="badge bg-primary ms-1">${post.likes}</span>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="sharePost(${post.id})">
+                                    <i class="fas fa-share me-1"></i>
+                                    Compartir
+                                </button>
+                            </div>
+                            <small class="text-muted">
+                                ${post.content.length} caracteres
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update statistics
+        function updateStats() {
+            totalPosts.textContent = posts.length;
+            postsCount.textContent = posts.length;
+            
+            // Unique authors
+            const authors = new Set(posts.map(post => post.author));
+            totalAuthors.textContent = authors.size;
+            
+            // Last update
+            if (posts.length > 0) {
+                const lastPost = posts[0];
+                const date = new Date(lastPost.timestamp);
+                lastUpdate.textContent = date.toLocaleString('es-ES', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } else {
+                lastUpdate.textContent = 'Sin actividad';
+            }
+        }
+
+        // Like a post
+        function likePost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.likes++;
+                localStorage.setItem('micro-blog-posts', JSON.stringify(posts));
+                renderPosts();
+                showAlert('¡Gracias por tu like!', 'success');
+            }
+        }
+
+        // Share a post
+        function sharePost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                const url = window.location.href;
+                const text = `Revisa este mensaje en el Micro-Blog ESPE: "${post.content}" - por ${post.author}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Micro-Blog ESPE',
+                        text: text,
+                        url: url
+                    });
+                } else {
+                    // Fallback: copy to clipboard
+                    navigator.clipboard.writeText(`${text}\n${url}`).then(() => {
+                        showAlert('¡Enlace copiado al portapapeles!', 'info');
+                    });
+                }
+            }
+        }
+
+        // Save draft
+        function saveDraft() {
+            localStorage.setItem('micro-blog-draft-content', postContent.value);
+            localStorage.setItem('micro-blog-draft-author', postAuthor.value);
+        }
+
+        // Load draft
+        function loadDraft() {
+            const draftContent = localStorage.getItem('micro-blog-draft-content');
+            const draftAuthor = localStorage.getItem('micro-blog-draft-author');
+            
+            if (draftContent) postContent.value = draftContent;
+            if (draftAuthor) postAuthor.value = draftAuthor;
+            
+            updateCharacterCount();
+        }
+
+        // Clear draft
+        function clearDraft() {
+            localStorage.removeItem('micro-blog-draft-content');
+            localStorage.removeItem('micro-blog-draft-author');
+        }
+
+        // Show alert
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 100px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Demo data generator
+        function generateDemoData() {
+            const demoMessages = [
+                {
+                    content: "¡Bienvenidos al nuevo Micro-Blog institucional de ESPE! 🎓 Una plataforma moderna para fortalecer nuestra comunidad universitaria.",
+                    author: "Rector ESPE"
+                },
+                {
+                    content: "Excelente iniciativa para mejorar la comunicación interna. ¡Felicidades al equipo de desarrollo! 👏",
+                    author: "Dr. Ana Martínez"
+                },
+                {
+                    content: "Como estudiante de Ingeniería en Sistemas, me emociona ver proyectos como este que demuestran la calidad de nuestra educación.",
+                    author: "Carlos Estudiante"
+                },
+                {
+                    content: "La implementación del ciclo DevOps es impresionante. ¡Gran trabajo en la automatización del deployment! 🚀",
+                    author: "Ing. DevOps"
+                }
+            ];
+
+            demoMessages.forEach((demo, index) => {
+                const post = {
+                    id: nextId++,
+                    content: demo.content,
+                    author: demo.author,
+                    timestamp: new Date(Date.now() - (index * 3600000)).toISOString(), // Staggered times
+                    likes: Math.floor(Math.random() * 10)
+                };
+                posts.unshift(post);
+            });
+
+            localStorage.setItem('micro-blog-posts', JSON.stringify(posts));
+            localStorage.setItem('micro-blog-next-id', nextId.toString());
+            
+            renderPosts();
+            updateStats();
+            showAlert('¡Datos de demostración cargados!', 'success');
+        }
+
+        // Add demo button for testing
+        setTimeout(() => {
+            if (posts.length === 0) {
+                const demoBtn = document.createElement('button');
+                demoBtn.className = 'btn btn-outline-warning btn-sm position-fixed';
+                demoBtn.style.cssText = 'bottom: 20px; right: 20px; z-index: 9999;';
+                demoBtn.innerHTML = '<i class="fas fa-magic me-1"></i> Cargar Demo';
+                demoBtn.onclick = generateDemoData;
+                document.body.appendChild(demoBtn);
+            }
+        }, 3000);
+
+    </script>
+</body>
+</html>
