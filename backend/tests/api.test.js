@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('./server');
+const app = require('../server');
 
 describe('Micro-Blog API Tests', () => {
   
@@ -47,7 +47,7 @@ describe('Micro-Blog API Tests', () => {
 
     test('POST /api/posts should reject empty content', async () => {
       const invalidPost = {
-        content: '',
+        content: '   ', // Espacios en blanco
         author: 'Test User'
       };
 
@@ -57,7 +57,7 @@ describe('Micro-Blog API Tests', () => {
         .expect(400);
       
       expect(response.body.success).toBe(false);
-      expect(response.body.error).toContain('vacío');
+      expect(response.body.error).toBe('El contenido no puede estar vacío');
     });
 
     test('POST /api/posts should reject content over 280 characters', async () => {
