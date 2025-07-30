@@ -1,0 +1,137 @@
+name: 🌐 Deploy to Netlify
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # ===============================
+  # JOB 1: BUILD FRONTEND
+  # ===============================
+  build:
+    name: 🔨 Build Frontend
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: npm ci
+      
+    - name: 🔨 Build frontend
+      run: npm run build
+      
+    - name: 📤 Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: dist/
+        retention-days: 1
+
+  # ===============================
+  # JOB 2: DEPLOY TO NETLIFY
+  # ===============================
+  deploy:
+    name: 🚀 Deploy to Netlify
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    
+    environment:
+      name: production
+      url: ${{ steps.netlify-deploy.outputs.deploy-url }}
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📥 Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-build
+        path: dist/
+        
+    - name: 🌐 Deploy to Netlify
+      id: netlify-deploy
+      uses: nwtgck/actions-netlify@v3.0
+      with:
+        publish-dir: './dist'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "🚀 Deploy from GitHub Actions - ${{ github.sha }}"
+        enable-pull-request-comment: false
+        enable-commit-comment: true
+        overwrites-pull-request-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        
+    - name: ✅ Deployment Success
+      if: success()
+      run: |
+        echo "🎉 Frontend deployed successfully to Netlify!"
+        echo "🌐 Deploy URL: ${{ steps.netlify-deploy.outputs.deploy-url }}"
+        echo "🔗 Website URL: ${{ steps.netlify-deploy.outputs.website-url }}"
+        
+    - name: 📋 Post-Deploy Verification
+      if: success()
+      run: |
+        sleep 10
+        echo "🔍 Testing frontend deployment..."
+        curl -f ${{ steps.netlify-deploy.outputs.deploy-url }} || exit 1
+        echo "✅ Frontend is responding correctly!"
+
+  # ===============================
+  # JOB 3: POST-DEPLOY TESTS
+  # ===============================
+  verify:
+    name: 🧪 Verify Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: success()
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🧪 Test Frontend
+      run: |
+        FRONTEND_URL="${{ needs.deploy.outputs.deploy-url }}"
+        echo "Testing frontend at: $FRONTEND_URL"
+        
+        # Test main page loads
+        curl -f "$FRONTEND_URL" -o /dev/null -s -w "Status: %{http_code}, Time: %{time_total}s\n"
+        
+        # Test that it contains expected content
+        curl -s "$FRONTEND_URL" | grep -q "Micro-Blog ESPE" || exit 1
+        
+        echo "✅ All frontend tests passed!"
+        
+    - name: 📊 Generate Deployment Report
+      run: |
+        echo "## 🌐 Netlify Deployment Report" > deployment-report.md
+        echo "" >> deployment-report.md
+        echo "**Date:** $(date)" >> deployment-report.md
+        echo "**Commit:** ${{ github.sha }}" >> deployment-report.md
+        echo "**Branch:** ${{ github.ref_name }}" >> deployment-report.md
+        echo "**Frontend URL:** ${{ needs.deploy.outputs.deploy-url }}" >> deployment-report.md
+        echo "" >> deployment-report.md
+        echo "### ✅ Verification Results:" >> deployment-report.md
+        echo "- Frontend responds correctly" >> deployment-report.md
+        echo "- Content loads as expected" >> deployment-report.md
+        echo "- Deployment successful" >> deployment-report.md
+        
+        cat deployment-report.md

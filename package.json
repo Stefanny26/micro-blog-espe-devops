@@ -7,8 +7,12 @@
     "start": "cd backend && npm start",
     "dev": "cd backend && npm run dev",
     "test": "cd backend && npm test",
+    "build": "npm run build:frontend",
+    "build:frontend": "mkdir -p dist && cp -r frontend/* dist/",
     "install-deps": "cd backend && npm install",
-    "heroku-postbuild": "cd backend && npm install"
+    "heroku-postbuild": "cd backend && npm install",
+    "deploy:netlify": "npm run build && netlify deploy --prod",
+    "preview:netlify": "npm run build && netlify deploy"
   },
   "repository": {
     "type": "git",

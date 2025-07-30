@@ -60,9 +60,18 @@ Garantizar la disponibilidad, rendimiento y confiabilidad del Micro-Blog Institu
   - Monitoreo desde múltiples ubicaciones
   - Alertas por email/SMS
 - **URLs a monitorear**:
-  - Página principal: `https://[app-name].herokuapp.com/`
-  - Health check: `https://[app-name].herokuapp.com/api/health`
-  - API Posts: `https://[app-name].herokuapp.com/api/posts`
+  - Frontend: `https://[site-name].netlify.app/`
+  - API via proxy: `https://[site-name].netlify.app/api/health`
+  - Backend directo: `https://[backend-app].herokuapp.com/api/health`
+  - API Posts: `https://[site-name].netlify.app/api/posts`
+
+### Netlify Analytics (Incluido)
+- **Función**: Métricas de frontend y CDN
+- **Métricas disponibles**:
+  - Page views y usuarios únicos
+  - Core Web Vitals (performance)
+  - Bandwidth y requests
+  - Distribución geográfica
 
 ### Heroku Metrics (Incluido)
 - **Función**: Métricas de infraestructura

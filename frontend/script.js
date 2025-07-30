@@ -1,5 +1,6 @@
 // Configuration
-const API_BASE_URL = '/api';
+const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isDevelopment ? 'http://localhost:3000/api' : '/api';
 const MAX_CHARACTERS = 280;
 
 // DOM Elements
