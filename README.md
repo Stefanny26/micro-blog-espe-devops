@@ -64,6 +64,49 @@ npm start
 
 La aplicación estará disponible en `http://localhost:3000`
 
+## 🚀 Deployment
+
+### Manual Netlify Setup (Required First Time)
+
+Since this is a new project, you need to set up Netlify manually:
+
+1. **Go to [netlify.com](https://netlify.com) and sign up with GitHub**
+2. **Click "Add new site" → "Import from Git"**
+3. **Connect to GitHub and select this repository**: `Stefanny26/micro-blog-espe-devops`
+4. **Configure build settings**:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Base directory: (leave empty)
+5. **Deploy site**
+
+The site will be available at: `https://[random-name].netlify.app`
+
+### Optional: Custom Domain
+To get a predictable URL like `micro-blog-espe-devops.netlify.app`:
+1. In Netlify dashboard → Site settings → General → Change site name
+2. Update the URL in this README
+
+### Frontend (Netlify) - Auto Deploy
+Once configured, the frontend deploys automatically:
+
+- **Build Command**: `npm run build`
+- **Publish Directory**: `dist`
+- **Deploy Trigger**: Push to `main` branch
+
+### GitHub Pages (Backup)
+Also available in GitHub Pages as alternative:
+- **URL**: https://stefanny26.github.io/micro-blog-espe-devops/
+- **Setup**: Enable in repo Settings → Pages → Deploy from branch `main`
+
+### Build Local
+```bash
+# Construir el frontend
+npm run build
+
+# Los archivos se generan en /dist/
+ls dist/
+```
+
 ## 🧪 Ejecutar Pruebas
 
 ```bash
@@ -108,13 +151,16 @@ PLAN → CODE → BUILD → TEST → RELEASE → DEPLOY → OPERATE → MONITOR
 - ✅ Backend API (10/10 tests pasando)
 - ✅ Frontend responsivo
 - ✅ Pipeline CI/CD (GitHub Actions)
-- 🔄 Despliegue en progreso
+- ✅ Build automático (`dist/` directory)
+- ✅ Repositorio GitHub activo
+- 📋 **NEXT**: Configurar manualmente Netlify (pasos arriba)
 - 🔄 Monitoreo en configuración
 
 ## 🌐 Enlaces del Proyecto
 
-- **Aplicación en vivo**: [Próximamente - configurar deployment]
-- **Repositorio GitHub**: [Configurar según github-setup.md](./docs/github-setup.md)
+- **Aplicación Frontend**: [Pendiente configuración manual Netlify](https://netlify.com) *(seguir pasos arriba)*
+- **Demo Alternativo**: [GitHub Pages](https://stefanny26.github.io/micro-blog-espe-devops/) *(activar en Settings → Pages)*
+- **Repositorio GitHub**: https://github.com/Stefanny26/micro-blog-espe-devops
 - **Tablero Kanban**: [Ver estado de tareas](./docs/kanban-board.md)
 - **Plan de Monitoreo**: [Ver estrategia](./docs/monitoring-plan.md)
 - **Guía de Deployment**: [Ver instrucciones](./docs/deployment-guide.md)

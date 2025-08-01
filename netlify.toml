@@ -1,11 +1,24 @@
 # Build settings for Netlify deployment
 [build]
   base = "."
-  publish = "."
-  command = "echo 'Static site deployment - no build needed'"
+  publish = "dist"
+  command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
+
+# Redirect all requests to backend API endpoints to external service
+[[redirects]]
+  from = "/api/*"
+  to = "https://micro-blog-espe-backend.herokuapp.com/api/:splat"
+  status = 200
+  force = true
+
+# SPA redirect - all routes should serve index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 # Headers for security
 [[headers]]
@@ -15,9 +28,3 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-
-# SPA redirect - all routes should serve index.html
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200

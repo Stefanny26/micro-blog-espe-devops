@@ -157,6 +157,7 @@ Una vez configurado, tendrás estas URLs:
 - **Actions**: `https://github.com/[usuario]/micro-blog-institucional-espe/actions`
 - **Projects**: `https://github.com/[usuario]/micro-blog-institucional-espe/projects`
 - **Issues**: `https://github.com/[usuario]/micro-blog-institucional-espe/issues`
+- **Frontend Deploy**: `https://micro-blog-espe-devops.netlify.app/`
 
 ## 🚀 Trigger Primer Deploy
 
