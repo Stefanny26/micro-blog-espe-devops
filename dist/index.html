@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro-Blog Institucional ESPE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Micro-Blog ESPE
+            </a>
+            <span class="navbar-text">
+                <i class="fas fa-users me-1"></i>
+                Comunicación Institucional
+            </span>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-4">
+        
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="text-center">
+                    <h1 class="display-6 text-primary">
+                        <i class="fas fa-comments me-2"></i>
+                        Micro-Blog Institucional
+                    </h1>
+                    <p class="lead text-muted">
+                        Comparte tus ideas con la comunidad ESPE
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alertContainer"></div>
+
+        <!-- Post Creation Form -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-pen me-2"></i>
+                            Nuevo Mensaje
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="postForm">
+                            <div class="mb-3">
+                                <label for="authorInput" class="form-label">
+                                    <i class="fas fa-user me-1"></i>
+                                    Autor (opcional)
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="authorInput" 
+                                       placeholder="Tu nombre o pseudónimo"
+                                       maxlength="50">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contentInput" class="form-label">
+                                    <i class="fas fa-message me-1"></i>
+                                    Mensaje
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <textarea class="form-control" 
+                                          id="contentInput" 
+                                          rows="3" 
+                                          placeholder="¿Qué quieres compartir con la comunidad ESPE?"
+                                          maxlength="280" 
+                                          required></textarea>
+                                <div class="form-text">
+                                    <span id="characterCount">0</span>/280 caracteres
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>
+                                    Publicar Mensaje
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-stream me-2"></i>
+                            Mensajes Recientes
+                        </h5>
+                        <button class="btn btn-outline-primary btn-sm" onclick="loadPosts()">
+                            <i class="fas fa-sync-alt me-1"></i>
+                            Actualizar
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- Loading State -->
+                        <div id="loadingState" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Cargando mensajes...</p>
+                        </div>
+
+                        <!-- Posts Container -->
+                        <div id="postsContainer" class="d-none">
+                            <!-- Posts will be dynamically loaded here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="emptyState" class="text-center py-5 d-none">
+                            <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No hay mensajes aún</h6>
+                            <p class="text-muted">¡Sé el primero en compartir algo!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card bg-light shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="stat-item">
+                                    <i class="fas fa-comments fa-2x text-primary mb-2"></i>
+                                    <h4 id="totalPosts" class="mb-0">0</h4>
+                                    <small class="text-muted">Mensajes Totales</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-item">
+                                    <i class="fas fa-clock fa-2x text-success mb-2"></i>
+                                    <h4 id="lastUpdate" class="mb-0">--:--</h4>
+                                    <small class="text-muted">Última Actualización</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-item">
+                                    <i class="fas fa-heartbeat fa-2x text-info mb-2"></i>
+                                    <h4 id="systemStatus" class="mb-0">
+                                        <span class="badge bg-success">Activo</span>
+                                    </h4>
+                                    <small class="text-muted">Estado del Sistema</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-university me-2"></i>Universidad ESPE</h6>
+                    <p class="mb-0">Micro-Blog Institucional - Fomentando la comunicación interna</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">
+                        <i class="fas fa-code me-1"></i>
+                        Desarrollado para Programación Avanzada 202550
+                    </p>
+                    <small class="text-muted">v1.0.0 - Implementado con DevOps</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>
